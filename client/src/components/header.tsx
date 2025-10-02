@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../styles/header.scss";
-import { Link as ScrollLink } from "react-scroll";
+// import { Link as ScrollLink } from "react-scroll";
 import { useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 
@@ -27,29 +27,16 @@ const Header = () => {
         <nav className={`nav ${menuOpen ? "open" : ""}`}>
           <ul>
             <li>
-              <a href="#" onClick={closeMenu}>
-                Home
-              </a>
+              <a onClick={() => navigate("/")}>Home</a>
             </li>
             <li>
-              <ScrollLink
-                to="howItWorks"
-                smooth={true}
-                duration={500}
-                onClick={closeMenu}
-              >
-                How It Works
-              </ScrollLink>
+              <a onClick={() => navigate("/howitworks")}>How It Works</a>
             </li>
             <li>
-              <a href="/KeyFeatures" onClick={closeMenu}>
-                Features
-              </a>
+              <a onClick={() => navigate("/features")}>Features</a>
             </li>
             <li>
-              <a href="/Footer" onClick={closeMenu}>
-                Contact
-              </a>
+              <a onClick={() => navigate("/footer")}>Contact</a>
             </li>
           </ul>
         </nav>
@@ -59,7 +46,7 @@ const Header = () => {
           <button className="login" onClick={() => navigate("/login")}>
             Login
           </button>
-          <button className="signup" onClick={() => navigate("/register")}>
+          <button className="signup" onClick={() => navigate("/signup")}>
             Sign Up
           </button>
         </div>
