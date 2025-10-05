@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "leaflet/dist/leaflet.css";
-
 import "./App.css";
 import "./index.css";
 
@@ -12,22 +10,20 @@ import CentralAgencySignUp from "./components/signup/central-agency/page";
 import FieldOfficerSignUp from "./components/signup/field-officer/page";
 import NGOSignUp from "./components/signup/ngo/page";
 import PlanningDevelopmentSignUp from "./components/signup/planning-development/page";
+import Map from "./pages/map.jsx";
 
-import DashboardLayout from "./components/Dashboard/layout";
-import Analytics from "./components/Dashboard/Analytics";
-import Claims from "./components/Dashboard/claims";
-import Schemes from "./components/Dashboard/Schemes";
-import Atlas from "./components/Dashboard/Atlas";
-import VoiceFeedback from "./components/Dashboard/voicefeedback";
+import DashboardLayout from "./components/Dashbaord/Layout.js";
+import Analytics from "./components/Dashbaord/Analytics.js";
+import Claims from "./components/Dashbaord/claims.js";
+import Schemes from "./components/Dashbaord/Schemes.js";
+import Atlas from "./components/Dashbaord/atlas.js";
+import VoiceFeedback from "./components/Dashbaord/Voicefeedback.js";
 
-
-
-
+import "./styles/header.scss";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public pages */}
         <Route path="/" element={<HomePage />} />
         <Route path="/howitworks" element={<HowItWorksSection />} />
         <Route path="/signup" element={<SignUpPage />} />
@@ -55,14 +51,15 @@ function App() {
           path="/signup/planning-development"
           element={<PlanningDevelopmentSignUp />}
         />
+        {/* <Route path="/map" element={<Map />} /> */}
 
-        {/* Dashboard routes */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
+
+         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Analytics />} /> {/* default page */}
           <Route path="analytics" element={<Analytics />} />
           <Route path="claims" element={<Claims />} />
           <Route path="schemes" element={<Schemes />} />
-          <Route path="atlas" element={<Atlas />} />
+          <Route path="atlas" element={<Map />} />
           <Route path="voice-feedback" element={<VoiceFeedback />} />
         </Route>
       </Routes>
