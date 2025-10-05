@@ -3,37 +3,29 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../index.css";
 
-// MapComponent.tsx
-// Converted from your HTML prototype to a typed React + Tailwind component.
-// - Demo playback (Run Demo) is implemented and wired to the button (async sequence)
-// - Uses refs so Leaflet objects are accessible from the demo function
-// - computeDSS updates the on-screen box and highlights the village polygon
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
-const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+const Map = () => {
+  const mapRef = useRef(null);
+  const mapContainerRef = useRef(null);
 
-const MapComponent: React.FC = () => {
-  const mapRef = useRef<L.Map | null>(null);
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const dssRef = useRef<HTMLDivElement | null>(null);
+  const dssRef = useRef(null);
   const demoRunningRef = useRef(false);
 
   // layer refs
-  const villageLayerRef = useRef<L.GeoJSON | null>(null);
-  const ifrLayerRef = useRef<L.GeoJSON | null>(null);
-  const cfrLayerRef = useRef<L.GeoJSON | null>(null);
-  const waterLayerRef = useRef<L.GeoJSON | null>(null);
-  const farmLayerRef = useRef<L.GeoJSON | null>(null);
-  const homeLayerRef = useRef<L.GeoJSON | null>(null);
+  const villageLayerRef = useRef(null);
+  const ifrLayerRef = useRef(null);
+  const cfrLayerRef = useRef(null);
+  const waterLayerRef = useRef(null);
+  const farmLayerRef = useRef(null);
+  const homeLayerRef = useRef(null);
 
-  // function ref so both map event listeners and demoSequence can call it
-  const computeDSSRef = useRef<
-    (() => { priority: string; farmCount: number; waterCount: number }) | null
-  >(null);
+  const computeDSSRef = useRef(null);
 
   // ------------------------
-  // GeoJSON data (kept same as your HTML)
+  // GeoJSON data
   // ------------------------
-  const villageGeo: any = {
+  const villageGeo = {
     type: "Feature",
     properties: { name: "Sukhpura" },
     geometry: {
@@ -50,7 +42,7 @@ const MapComponent: React.FC = () => {
     },
   };
 
-  const ifrGeo: any = {
+  const ifrGeo = {
     type: "FeatureCollection",
     features: [
       {
@@ -119,7 +111,7 @@ const MapComponent: React.FC = () => {
     ],
   };
 
-  const cfrGeo: any = {
+  const cfrGeo = {
     type: "Feature",
     properties: { id: "CFR-001", name: "Sukhpura Community Forest" },
     geometry: {
@@ -136,7 +128,7 @@ const MapComponent: React.FC = () => {
     },
   };
 
-  const waterGeo: any = {
+  const waterGeo = {
     type: "FeatureCollection",
     features: [
       {
@@ -147,7 +139,7 @@ const MapComponent: React.FC = () => {
     ],
   };
 
-  const farmsGeo: any = {
+  const farmsGeo = {
     type: "FeatureCollection",
     features: [
       {
@@ -173,7 +165,7 @@ const MapComponent: React.FC = () => {
     ],
   };
 
-  const homesGeo: any = {
+  const homesGeo = {
     type: "FeatureCollection",
     features: [
       {
@@ -190,11 +182,10 @@ const MapComponent: React.FC = () => {
   };
 
   // ------------------------
-  // Initialize map + layers inside effect
+  // Initialize map + layers
   // ------------------------
   useEffect(() => {
-    if (mapRef.current) return;
-    if (!mapContainerRef.current) return;
+    if (mapRef.current || !mapContainerRef.current) return;
 
     const map = L.map(mapContainerRef.current, { zoomControl: true }).setView(
       [22.0005, 78.0005],
@@ -207,66 +198,40 @@ const MapComponent: React.FC = () => {
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(map);
 
-    // village
-    villageLayerRef.current = L.geoJSON(villageGeo as any, {
+    villageLayerRef.current = L.geoJSON(villageGeo, {
       style: { color: "#444", weight: 2, fill: false },
     }).addTo(map);
 
-    // IFR style fn
-    function ifrStyle(feature: any) {
-      return {
-        color: feature.properties.status === "Granted" ? "#2e7d32" : "#f39c12",
-        weight: 1,
-        fillOpacity: 0.35,
-      };
-    }
+    const ifrStyle = (feature) => ({
+      color: feature.properties.status === "Granted" ? "#2e7d32" : "#f39c12",
+      weight: 1,
+      fillOpacity: 0.35,
+    });
 
-    ifrLayerRef.current = L.geoJSON(ifrGeo as any, {
-      style: ifrStyle as any,
-      onEachFeature: function (feature: any, layer: any) {
+    ifrLayerRef.current = L.geoJSON(ifrGeo, {
+      style: ifrStyle,
+      onEachFeature: function (feature, layer) {
         const p = feature.properties;
-        const html = `<b>Claimant:</b> ${p.name}<br><b>ID:</b> ${p.id}<br><b>Area:</b> ${p.area}<br><b>Status:</b> ${p.status}<br><br><a href='#' onclick=\"alert('Pretend: open scanned document for ${p.name}')\">View scanned record</a>`;
+        const html = `<b>Claimant:</b> ${p.name}<br><b>ID:</b> ${p.id}<br><b>Area:</b> ${p.area}<br><b>Status:</b> ${p.status}<br><br><a href='#' onclick="alert('Pretend: open scanned document for ${p.name}')">View scanned record</a>`;
         layer.bindPopup(html);
-        layer.on("mouseover", function () {
-          layer.setStyle({ weight: 3 });
-        });
-        layer.on("mouseout", function () {
-          layer.setStyle(ifrStyle(feature));
-        });
-      },
-    }); // trick to keep ts happy
-
-    // Note: .notAddToMap isn't real — below we set the ref properly
-    ifrLayerRef.current = L.geoJSON(ifrGeo as any, {
-      style: ifrStyle as any,
-      onEachFeature: function (feature: any, layer: any) {
-        const p = feature.properties;
-        const html = `<b>Claimant:</b> ${p.name}<br><b>ID:</b> ${p.id}<br><b>Area:</b> ${p.area}<br><b>Status:</b> ${p.status}<br><br><a href='#' onclick=\"alert('Pretend: open scanned document for ${p.name}')\">View scanned record</a>`;
-        layer.bindPopup(html);
-        layer.on("mouseover", function () {
-          layer.setStyle({ weight: 3 });
-        });
-        layer.on("mouseout", function () {
-          layer.setStyle(ifrStyle(feature));
-        });
+        layer.on("mouseover", () => layer.setStyle({ weight: 3 }));
+        layer.on("mouseout", () => layer.setStyle(ifrStyle(feature)));
       },
     });
 
-    cfrLayerRef.current = L.geoJSON(cfrGeo as any, {
+    cfrLayerRef.current = L.geoJSON(cfrGeo, {
       style: {
         color: "#1e90ff",
         fillColor: "#e8f5ff",
         weight: 1,
         fillOpacity: 0.12,
       },
-      onEachFeature: function (f: any, l: any) {
-        l.bindPopup(`<b>${f.properties.name}</b> (CFR)`);
-      },
+      onEachFeature: (f, l) => l.bindPopup(`<b>${f.properties.name}</b> (CFR)`),
     });
 
-    waterLayerRef.current = L.geoJSON(waterGeo as any, {
-      pointToLayer: function (feature: any, latlng: L.LatLng) {
-        return L.circleMarker(latlng, {
+    waterLayerRef.current = L.geoJSON(waterGeo, {
+      pointToLayer: (feature, latlng) =>
+        L.circleMarker(latlng, {
           radius: 8,
           fillColor: "#0066cc",
           color: "#0066cc",
@@ -274,13 +239,12 @@ const MapComponent: React.FC = () => {
           fillOpacity: 0.9,
         }).bindPopup(
           `<b>Water:</b> ${feature.properties.type} (${feature.properties.id})`
-        );
-      },
+        ),
     });
 
-    farmLayerRef.current = L.geoJSON(farmsGeo as any, {
-      pointToLayer: function (feature: any, latlng: L.LatLng) {
-        return L.circleMarker(latlng, {
+    farmLayerRef.current = L.geoJSON(farmsGeo, {
+      pointToLayer: (feature, latlng) =>
+        L.circleMarker(latlng, {
           radius: 6,
           fillColor: "#9b59b6",
           color: "#7a3fa6",
@@ -288,24 +252,21 @@ const MapComponent: React.FC = () => {
           fillOpacity: 0.9,
         }).bindPopup(
           `<b>Farm:</b> ${feature.properties.owner || feature.properties.id}`
-        );
-      },
+        ),
     });
 
-    homeLayerRef.current = L.geoJSON(homesGeo as any, {
-      pointToLayer: function (feature: any, latlng: L.LatLng) {
-        return L.circleMarker(latlng, {
+    homeLayerRef.current = L.geoJSON(homesGeo, {
+      pointToLayer: (feature, latlng) =>
+        L.circleMarker(latlng, {
           radius: 5,
           fillColor: "#ffd166",
           color: "#cc9b35",
           weight: 1,
           fillOpacity: 0.95,
-        }).bindPopup(`<b>Home:</b> ${feature.properties.resident}`);
-      },
+        }).bindPopup(`<b>Home:</b> ${feature.properties.resident}`),
     });
 
-    // Layer control — overlays
-    const overlays: any = {
+    const overlays = {
       "IFR plots": ifrLayerRef.current,
       "CFR areas": cfrLayerRef.current,
       "Water bodies (AI)": waterLayerRef.current,
@@ -314,15 +275,12 @@ const MapComponent: React.FC = () => {
     };
 
     L.control.layers({}, overlays, { collapsed: false }).addTo(map);
-
-    // Scale
     L.control.scale({ position: "bottomright" }).addTo(map);
 
-    // computeDSS implementation
+    // computeDSS
     const computeDSS = () => {
       const farmCount = farmsGeo.features.length;
       const waterCount = waterGeo.features.length;
-
       let priority = "LOW";
       if (farmCount >= 3 && waterCount <= 1) priority = "HIGH";
       else if (farmCount >= 1 && waterCount <= 2) priority = "MEDIUM";
@@ -337,56 +295,30 @@ const MapComponent: React.FC = () => {
 
       if (dssRef.current) dssRef.current.innerHTML = msg;
 
-      // visual cue on map
       if (villageLayerRef.current) {
-        if (priority === "HIGH") {
-          villageLayerRef.current.setStyle({
-            color: "#b91c1c",
-            weight: 3,
-            fillOpacity: 0.02,
-          });
-        } else if (priority === "MEDIUM") {
-          villageLayerRef.current.setStyle({
-            color: "#b45309",
-            weight: 3,
-            fillOpacity: 0.02,
-          });
-        } else {
-          villageLayerRef.current.setStyle({
-            color: "#444",
-            weight: 2,
-            fillOpacity: 0,
-          });
-        }
+        villageLayerRef.current.setStyle({
+          color:
+            priority === "HIGH"
+              ? "#b91c1c"
+              : priority === "MEDIUM"
+              ? "#b45309"
+              : "#444",
+          weight: priority === "LOW" ? 2 : 3,
+          fillOpacity: priority === "LOW" ? 0 : 0.02,
+        });
       }
 
       return { priority, farmCount, waterCount };
     };
 
     computeDSSRef.current = computeDSS;
-
-    // recompute on overlay toggle
-    map.on("overlayadd overlayremove", () => {
-      computeDSSRef.current && computeDSSRef.current();
-    });
-
-    // run initial compute
+    map.on(
+      "overlayadd overlayremove",
+      () => computeDSSRef.current && computeDSSRef.current()
+    );
     computeDSS();
+    setTimeout(() => map.invalidateSize({ animate: true }), 100);
 
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 100);
-    // helper to open first IFR from console
-    (window as any).openFirstIFR = function () {
-      const l = ifrLayerRef.current?.getLayers();
-      if (l?.length) {
-        const firstLayer = l[0] as L.Polygon; // cast to polygon
-        firstLayer.openPopup();
-        mapRef.current?.fitBounds(firstLayer.getBounds());
-      }
-    };
-
-    // cleanup
     return () => {
       map.off();
       map.remove();
@@ -394,68 +326,49 @@ const MapComponent: React.FC = () => {
     };
   }, []);
 
-  // ------------------------
-  // Demo sequence uses refs created above
-  // ------------------------
   const demoSequence = async () => {
     if (demoRunningRef.current) return;
     const map = mapRef.current;
     if (!map) return;
     demoRunningRef.current = true;
 
-    // remove layers if present
     try {
-      if (map.hasLayer(ifrLayerRef.current as any))
-        map.removeLayer(ifrLayerRef.current as any);
-      if (map.hasLayer(cfrLayerRef.current as any))
-        map.removeLayer(cfrLayerRef.current as any);
-      if (map.hasLayer(waterLayerRef.current as any))
-        map.removeLayer(waterLayerRef.current as any);
-      if (map.hasLayer(farmLayerRef.current as any))
-        map.removeLayer(farmLayerRef.current as any);
-      if (map.hasLayer(homeLayerRef.current as any))
-        map.removeLayer(homeLayerRef.current as any);
-    } catch (e) {
-      /* ignore */
-    }
+      [
+        ifrLayerRef,
+        cfrLayerRef,
+        waterLayerRef,
+        farmLayerRef,
+        homeLayerRef,
+      ].forEach((ref) => {
+        if (map.hasLayer(ref.current)) map.removeLayer(ref.current);
+      });
+    } catch {}
 
-    // 1 - Toggle IFR plots
     ifrLayerRef.current?.addTo(map);
     await sleep(900);
 
-    // open first IFR popup and zoom to it
-    const fLayers = (ifrLayerRef.current as any)?.getLayers?.() || [];
+    const fLayers = ifrLayerRef.current?.getLayers?.() || [];
     if (fLayers.length) {
       try {
         map.fitBounds(fLayers[0].getBounds(), { maxZoom: 18 });
-      } catch (e) {}
+      } catch {}
       fLayers[0].openPopup();
     }
 
     await sleep(1400);
-
-    // 2 - Toggle CFR
     cfrLayerRef.current?.addTo(map);
     await sleep(1000);
-
-    // 3 - Toggle water bodies
     waterLayerRef.current?.addTo(map);
     await sleep(900);
-
-    // 4 - Toggle farms and homes
     farmLayerRef.current?.addTo(map);
     homeLayerRef.current?.addTo(map);
     await sleep(600);
 
-    // 5 - Compute DSS and highlight
     computeDSSRef.current && computeDSSRef.current();
 
-    // Pan back to village overview
     try {
-      map.fitBounds((villageLayerRef.current as any).getBounds(), {
-        padding: [50, 50],
-      });
-    } catch (e) {}
+      map.fitBounds(villageLayerRef.current.getBounds(), { padding: [50, 50] });
+    } catch {}
 
     demoRunningRef.current = false;
   };
@@ -464,7 +377,6 @@ const MapComponent: React.FC = () => {
     <div className="relative h-screen w-full font-sans">
       <div ref={mapContainerRef} id="map" className="h-full w-full" />
 
-      {/* Sidebar */}
       <div className="absolute top-3 left-3 z-[1001] bg-white/95 p-4 rounded-lg shadow-xl w-72">
         <h3 className="text-lg font-semibold">
           FRA Atlas — <em>Sukhpura</em>
@@ -476,7 +388,7 @@ const MapComponent: React.FC = () => {
 
         <button
           onClick={demoSequence}
-          className="mt-3 px-3 py-2 bg-blue-600 text-white rounded-md text-sm"
+          className="mt-3 px-3 py-2 bg-blue-600 text-white rounded-md text-sm cursor-pointer"
         >
           ▶ Run Demo
         </button>
@@ -486,40 +398,36 @@ const MapComponent: React.FC = () => {
           id="dssResult"
           className="mt-3 p-2 bg-gray-100 rounded-md text-sm"
         >
-          {" "}
-          <strong>DSS:</strong> Run demo or toggle layers to compute priority.{" "}
+          <strong>DSS:</strong> Run demo or toggle layers to compute priority.
         </div>
 
-        {/* Legend */}
         <div className="mt-3 space-y-2 text-sm">
           <div className="flex items-center gap-2">
-            <span className="w-5 h-3 rounded-sm bg-gray-700" />
-            Village Boundary
+            <span className="w-5 h-3 rounded-sm bg-gray-700" /> Village Boundary
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-5 h-3 rounded-sm bg-green-700" />
-            IFR plots (Granted)
+            <span className="w-5 h-3 rounded-sm bg-green-700" /> IFR plots
+            (Granted)
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-5 h-3 rounded-sm bg-yellow-500" />
-            IFR plots (Pending)
+            <span className="w-5 h-3 rounded-sm bg-yellow-500" /> IFR plots
+            (Pending)
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-5 h-3 rounded-sm bg-blue-600" />
-            Water bodies (AI-mapped)
+            <span className="w-5 h-3 rounded-sm bg-blue-600" /> Water bodies
+            (AI-mapped)
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-5 h-3 rounded-sm bg-purple-600" />
-            Farms (AI-mapped)
+            <span className="w-5 h-3 rounded-sm bg-purple-600" /> Farms
+            (AI-mapped)
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-5 h-3 rounded-sm bg-sky-500" />
-            CFR (Community Forest)
+            <span className="w-5 h-3 rounded-sm bg-sky-500" /> CFR (Community
+            Forest)
           </div>
         </div>
       </div>
 
-      {/* Footer Note */}
       <div className="absolute bottom-2 left-3 z-[1001] bg-white/90 px-3 py-2 rounded-md text-xs">
         Tip: Use the layer control (top-right) to toggle layers. Click an IFR
         polygon to view digitized details.
@@ -528,4 +436,4 @@ const MapComponent: React.FC = () => {
   );
 };
 
-export default MapComponent;
+export default Map;

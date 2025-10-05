@@ -25,7 +25,7 @@ const HeroSection = () => {
       map.setFog({
         color: "rgba(0, 102, 255, 0.4)",
         "high-color": "rgba(0, 102, 255, 0.1)",
-        "horizon-blend": 0.08,
+        "horizon-blend": 0.04,
         "space-color": "rgba(0,0,0,0)",
         "star-intensity": 0.0,
       });
@@ -95,7 +95,9 @@ const HeroSection = () => {
       map.on(
         "mousemove",
         "country-fills",
-        (e: MapLayerMouseEvent & { features?: mapboxgl.MapboxGeoJSONFeature[] }) => {
+        (
+          e: MapLayerMouseEvent & { features?: mapboxgl.MapboxGeoJSONFeature[] }
+        ) => {
           if (e.features && e.features.length > 0) {
             if (hoveredCountryId !== undefined) {
               map.setFeatureState(
@@ -106,13 +108,19 @@ const HeroSection = () => {
 
             hoveredCountryId = e.features[0].id as string | number | undefined;
             map.setFeatureState(
-              { source: "countries", id: hoveredCountryId },
+              {
+                source: "countries",
+                id: hoveredCountryId,
+              } as mapboxgl.MapboxGeoJSONFeature,
               { hover: true }
             );
 
             const countryName =
               e.features[0].properties?.ADMIN || e.features[0].properties?.name;
-            popup.setLngLat(e.lngLat).setHTML(`<strong>${countryName}</strong>`).addTo(map);
+            popup
+              .setLngLat(e.lngLat)
+              .setHTML(`<strong>${countryName}</strong>`)
+              .addTo(map);
           }
         }
       );

@@ -10,7 +10,7 @@ import CentralAgencySignUp from "./components/signup/central-agency/page";
 import FieldOfficerSignUp from "./components/signup/field-officer/page";
 import NGOSignUp from "./components/signup/ngo/page";
 import PlanningDevelopmentSignUp from "./components/signup/planning-development/page";
-import MapComponent from "./pages/map"; 
+import Map from "./pages/map.jsx";
 
 import "./styles/header.scss";
 function App() {
@@ -44,10 +44,7 @@ function App() {
           path="/signup/planning-development"
           element={<PlanningDevelopmentSignUp />}
         />
-        <Route
-          path="/map"
-          element={< MapComponent />}
-        />
+        <Route path="/map" element={<Map />} />
       </Routes>
     </BrowserRouter>
   );
