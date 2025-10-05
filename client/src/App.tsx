@@ -12,6 +12,13 @@ import NGOSignUp from "./components/signup/ngo/page";
 import PlanningDevelopmentSignUp from "./components/signup/planning-development/page";
 import Map from "./pages/map.jsx";
 
+import DashboardLayout from "./components/Dashbaord/Layout.js";
+import Analytics from "./components/Dashbaord/Analytics.js";
+import Claims from "./components/Dashbaord/claims.js";
+import Schemes from "./components/Dashbaord/Schemes.js";
+import Atlas from "./components/Dashbaord/atlas.js";
+import VoiceFeedback from "./components/Dashbaord/Voicefeedback.js";
+
 import "./styles/header.scss";
 function App() {
   return (
@@ -44,7 +51,17 @@ function App() {
           path="/signup/planning-development"
           element={<PlanningDevelopmentSignUp />}
         />
-        <Route path="/map" element={<Map />} />
+        {/* <Route path="/map" element={<Map />} /> */}
+
+
+         <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Analytics />} /> {/* default page */}
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="claims" element={<Claims />} />
+          <Route path="schemes" element={<Schemes />} />
+          <Route path="atlas" element={<Map />} />
+          <Route path="voice-feedback" element={<VoiceFeedback />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
