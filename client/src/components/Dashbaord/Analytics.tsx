@@ -48,11 +48,11 @@ const activities = [
 
 export default function Analytics() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
       {/* Left side main content */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* Top 3 analytics cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="xl:col-span-2 space-y-6">
+        {/* Top analytics cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Total Claims */}
           <div className="bg-white shadow rounded-lg p-4">
             <h2 className="text-sm font-medium text-gray-500">Total Claims</h2>
@@ -67,7 +67,9 @@ export default function Analytics() {
           </div>
           {/* Schemes Linked */}
           <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-sm font-medium text-gray-500">Schemes Linked</h2>
+            <h2 className="text-sm font-medium text-gray-500">
+              Schemes Linked
+            </h2>
             <p className="text-2xl font-bold">18</p>
             <p className="text-sm text-green-500">+2 new schemes</p>
           </div>
@@ -78,7 +80,10 @@ export default function Analytics() {
           <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
           <ul className="space-y-4">
             {activities.map((activity) => (
-              <li key={activity.id} className="flex items-start gap-3">
+              <li
+                key={activity.id}
+                className="flex items-start gap-3 flex-col sm:flex-row"
+              >
                 <div className="flex-shrink-0">{activity.icon}</div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">
@@ -106,7 +111,7 @@ export default function Analytics() {
             <p className="text-sm text-gray-600">
               15 complaints from Village X
             </p>
-            <div className="flex gap-2 mt-2">
+            <div className="flex flex-wrap gap-2 mt-2">
               <button className="px-3 py-1 bg-red-500 text-white rounded-md text-sm">
                 Assign
               </button>
@@ -123,22 +128,24 @@ export default function Analytics() {
         {/* Sentiment Analysis */}
         <div className="bg-white shadow rounded-lg p-4">
           <h2 className="text-lg font-semibold mb-4">Sentiment Analysis</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-                data={sentimentData}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={80}
-              >
-                {sentimentData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="flex justify-around mt-4 text-sm">
+          <div className="w-full h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={sentimentData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius="80%"
+                >
+                  {sentimentData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex justify-around mt-4 text-sm flex-wrap">
             <span className="text-green-500">Positive</span>
             <span className="text-yellow-500">Neutral</span>
             <span className="text-red-500">Negative</span>

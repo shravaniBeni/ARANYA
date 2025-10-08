@@ -85,8 +85,9 @@ export function SignUpForm({ userType }: SignUpFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 overflow-y-auto">
+      <div className="w-full max-w-2xl mx-auto py-10 px-4">
+        {/* Header */}
         <div className="text-center mb-8">
           <div className="mx-auto mb-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center">
             <Leaf className="w-8 h-8 text-primary-foreground" />
@@ -95,6 +96,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
           <p className="text-gray-600 mt-2">Register as {userType.title}</p>
         </div>
 
+        {/* Card */}
         <Card className="shadow-lg">
           <CardHeader className="space-y-1">
             <CardTitle className="text-xl text-center">
@@ -106,8 +108,9 @@ export function SignUpForm({ userType }: SignUpFormProps) {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Two-column layout */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2 ">
+                <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
                   <Input
                     id="firstName"
@@ -136,6 +139,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
                 </div>
               </div>
 
+              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
                 <Input
@@ -150,6 +154,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
                 />
               </div>
 
+              {/* Phone */}
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
                 <Input
@@ -164,6 +169,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
                 />
               </div>
 
+              {/* Organization */}
               <div className="space-y-2">
                 <Label htmlFor="organization">{getOrganizationLabel()}</Label>
                 <Input
@@ -178,6 +184,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
                 />
               </div>
 
+              {/* Designation */}
               <div className="space-y-2">
                 <Label htmlFor="designation">Designation</Label>
                 <Input
@@ -192,6 +199,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
                 />
               </div>
 
+              {/* State & District */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="state">State</Label>
@@ -204,34 +212,11 @@ export function SignUpForm({ userType }: SignUpFormProps) {
                       <SelectValue placeholder="Select your state" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="andhra-pradesh">
-                        Andhra Pradesh
-                      </SelectItem>
-                      <SelectItem value="assam">Assam</SelectItem>
-                      <SelectItem value="bihar">Bihar</SelectItem>
-                      <SelectItem value="chhattisgarh">Chhattisgarh</SelectItem>
-                      <SelectItem value="gujarat">Gujarat</SelectItem>
-                      <SelectItem value="haryana">Haryana</SelectItem>
-                      <SelectItem value="himachal-pradesh">
-                        Himachal Pradesh
-                      </SelectItem>
-                      <SelectItem value="jharkhand">Jharkhand</SelectItem>
-                      <SelectItem value="karnataka">Karnataka</SelectItem>
-                      <SelectItem value="kerala">Kerala</SelectItem>
-                      <SelectItem value="madhya-pradesh">
-                        Madhya Pradesh
-                      </SelectItem>
                       <SelectItem value="maharashtra">Maharashtra</SelectItem>
-                      <SelectItem value="odisha">Odisha</SelectItem>
-                      <SelectItem value="punjab">Punjab</SelectItem>
+                      <SelectItem value="karnataka">Karnataka</SelectItem>
+                      <SelectItem value="gujarat">Gujarat</SelectItem>
+                      <SelectItem value="kerala">Kerala</SelectItem>
                       <SelectItem value="rajasthan">Rajasthan</SelectItem>
-                      <SelectItem value="tamil-nadu">Tamil Nadu</SelectItem>
-                      <SelectItem value="telangana">Telangana</SelectItem>
-                      <SelectItem value="uttar-pradesh">
-                        Uttar Pradesh
-                      </SelectItem>
-                      <SelectItem value="uttarakhand">Uttarakhand</SelectItem>
-                      <SelectItem value="west-bengal">West Bengal</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -251,6 +236,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
                 </div>
               </div>
 
+              {/* Passwords */}
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
@@ -312,9 +298,9 @@ export function SignUpForm({ userType }: SignUpFormProps) {
                 </div>
               </div>
 
+              {/* Terms */}
               <div className="flex items-center space-x-2">
                 <input
-                  title="Agree to terms"
                   id="terms"
                   type="checkbox"
                   className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
@@ -340,6 +326,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
               </Button>
             </form>
 
+            {/* Footer links */}
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}

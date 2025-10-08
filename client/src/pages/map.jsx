@@ -375,9 +375,9 @@ const Map = () => {
 
   return (
     <div className="relative h-screen w-full font-sans">
-      <div ref={mapContainerRef} id="map" className="h-full w-full" />
+      <div ref={mapContainerRef} id="map" className="h-full w-full z-30" />
 
-      <div className="absolute top-3 left-3 z-[1001] bg-white/95 p-4 rounded-lg shadow-xl w-72">
+      <div className="absolute top-3 left-3 z-30 bg-white/95 p-4 rounded-lg shadow-xl w-72">
         <h3 className="text-lg font-semibold">
           FRA Atlas — <em>Sukhpura</em>
         </h3>

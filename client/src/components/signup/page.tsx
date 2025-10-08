@@ -50,8 +50,9 @@ const userTypes = [
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 overflow-y-auto">
+      <div className="w-full max-w-4xl mx-auto py-10 px-4">
+        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Create Your Account
@@ -61,6 +62,7 @@ export default function SignUpPage() {
           </p>
         </div>
 
+        {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {userTypes.map((userType) => {
             const IconComponent = userType.icon;
@@ -94,7 +96,8 @@ export default function SignUpPage() {
           })}
         </div>
 
-        <div className="text-center mt-8">
+        {/* Footer */}
+        <div className="text-center mt-8 mb-4">
           <p className="text-gray-600">
             Already have an account?{" "}
             <Link
