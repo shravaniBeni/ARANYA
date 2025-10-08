@@ -301,6 +301,7 @@ export function SignUpForm({ userType }: SignUpFormProps) {
               {/* Terms */}
               <div className="flex items-center space-x-2">
                 <input
+                  title="Agree to terms"
                   id="terms"
                   type="checkbox"
                   className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
