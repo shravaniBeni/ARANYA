@@ -2,8 +2,11 @@ import { useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import type { Map, MapLayerMouseEvent } from "mapbox-gl";
 import styles from "../styles/HeroSection.module.scss";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     mapboxgl.accessToken =
       "pk.eyJ1Ijoic3RldmllZ3JpZmZpbmRlc2lnbiIsImEiOiJja24waTQzeHYwbndvMnZtbnFrYXV3ZjdjIn0.zhhJzykz0VYq7RQWBJxh7A";
@@ -182,8 +185,18 @@ const HeroSection = () => {
           governance through innovative technology solutions.
         </p>
         <div className={styles.buttons}>
-          <button className={styles.primary}>Get Started Now</button>
-          <button className={styles.secondary}>Explore Features</button>
+          <button
+            className={styles.primary}
+            onClick={() => navigate("/dashboard")}
+          >
+            Quick Dashboard
+          </button>
+          <button
+            className={styles.secondary}
+            onClick={() => navigate("/dashboard")}
+          >
+            Explore Features
+          </button>
         </div>
       </div>
       <div id="map" className={styles.map}></div>

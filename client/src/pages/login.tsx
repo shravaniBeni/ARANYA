@@ -1,32 +1,38 @@
-import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Leaf, Eye, EyeOff } from "lucide-react"
-import { Link } from "react-router-dom"
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Leaf, Eye, EyeOff } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface SignInFormProps {
   userType: {
-    id: string
-    title: string
-    description: string
-    color: string
-    iconColor: string
-  }
+    id: string;
+    title: string;
+    description: string;
+    color: string;
+    iconColor: string;
+  };
 }
 
 export default function SignInForm({ userType }: SignInFormProps) {
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Sign in attempt:", { userType: userType.id, ...formData })
-  }
+    e.preventDefault();
+    console.log("Sign in attempt:", { userType: userType.id, ...formData });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
@@ -37,14 +43,20 @@ export default function SignInForm({ userType }: SignInFormProps) {
             <Leaf className="w-8 h-8 text-primary-foreground" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
-          <p className="text-gray-600 mt-2">Sign in to your {userType.title} account</p>
+          <p className="text-gray-600 mt-2">
+            Sign in to your {userType.title} account
+          </p>
         </div>
 
         {/* Card */}
         <Card className="shadow-lg">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-xl text-center">{userType.title} Sign In</CardTitle>
-            <CardDescription className="text-center text-sm">{userType.description}</CardDescription>
+            <CardTitle className="text-xl text-center">
+              {userType.title} Sign In
+            </CardTitle>
+            <CardDescription className="text-center text-sm">
+              {userType.description}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -56,7 +68,9 @@ export default function SignInForm({ userType }: SignInFormProps) {
                   type="email"
                   placeholder="Enter your email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -70,7 +84,9 @@ export default function SignInForm({ userType }: SignInFormProps) {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                     required
                   />
                   <Button
@@ -93,7 +109,7 @@ export default function SignInForm({ userType }: SignInFormProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <input
-                  title="Remember me"
+                    title="Remember me"
                     id="remember"
                     type="checkbox"
                     className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
@@ -102,13 +118,19 @@ export default function SignInForm({ userType }: SignInFormProps) {
                     Remember me
                   </Label>
                 </div>
-                <Link to="#" className="text-sm text-primary hover:text-primary/80">
+                <Link
+                  to="#"
+                  className="text-sm text-primary hover:text-primary/80"
+                >
                   Forgot password?
                 </Link>
               </div>
 
               {/* Submit */}
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90"
+              >
                 Sign In
               </Button>
             </form>
@@ -117,7 +139,10 @@ export default function SignInForm({ userType }: SignInFormProps) {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Don't have an account?{" "}
-                <Link to={`/signup/${userType.id}`} className="text-primary hover:text-primary/80 font-medium">
+                <Link
+                  to={`/signup/${userType.id}`}
+                  className="text-primary hover:text-primary/80 font-medium"
+                >
                   Sign up
                 </Link>
               </p>
@@ -125,7 +150,10 @@ export default function SignInForm({ userType }: SignInFormProps) {
 
             {/* Back to selection */}
             <div className="mt-4 text-center">
-              <Link to="/login" className="text-sm text-gray-500 hover:text-gray-700">
+              <Link
+                to="/login"
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
                 ← Back to user selection
               </Link>
             </div>
@@ -133,5 +161,5 @@ export default function SignInForm({ userType }: SignInFormProps) {
         </Card>
       </div>
     </div>
-  )
+  );
 }

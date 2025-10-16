@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import "./index.css";
-
+// import FeaturesTimeline from "@/pages/features";
 import HomePage from "./pages/homepage";
 import { HowItWorksSection } from "./components/how-it-works-section";
 import SignUpPage from "./components/signup/page";
@@ -54,13 +54,14 @@ function App() {
         {/* <Route path="/map" element={<Map />} /> */}
 
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Analytics />} /> {/* default page */}
+          <Route index element={<Map />} /> {/* default page */}
           <Route path="analytics" element={<Analytics />} />
           <Route path="claims" element={<Claims />} />
           <Route path="schemes" element={<Schemes />} />
           <Route path="atlas" element={<Map />} />
           <Route path="voice-feedback" element={<VoiceFeedback />} />
         </Route>
+        {/* <Route path="/features" element={<FeaturesTimeline />} /> */}
       </Routes>
     </BrowserRouter>
   );
